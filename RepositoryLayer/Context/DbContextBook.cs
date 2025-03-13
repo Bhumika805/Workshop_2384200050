@@ -13,7 +13,7 @@ namespace RepositoryLayer.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            // ✅ Define primary keys explicitly
+            //  Define primary keys explicitly
             modelBuilder.Entity<UserContactBook>()
                 .HasKey(u => u.UserId);
 

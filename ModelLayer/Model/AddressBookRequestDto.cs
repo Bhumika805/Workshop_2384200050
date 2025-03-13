@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.Model
 {
-    public class UserRequest
+    public class AddressBookRequestDto
     {
         public string Name { get; set; }
-        public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        public string PhoneNumber { get; set; }
         public string Address { get; set; }
     }
 }
-
