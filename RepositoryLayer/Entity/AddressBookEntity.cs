@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.Model
 {
-    public class AddressBookEntry
+    public class AddressBookEntity
     {
         [Key]  //  Ensure AddressBookEntryId is a primary key
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AddressBookEntryId { get; set; }
+        public int AddressBookEntityId { get; set; }
 
         public string Name { get; set; }
         public string Email { get; set; }

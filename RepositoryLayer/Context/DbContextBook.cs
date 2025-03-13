@@ -9,7 +9,7 @@ namespace RepositoryLayer.Context
 
         public DbSet<UserContactBook> UserContactBooks { get; set; }
 
-        public DbSet<AddressBookEntry> AddressBookEntries { get; set; }
+        public DbSet<AddressBookEntity> AddressBookEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -17,12 +17,12 @@ namespace RepositoryLayer.Context
             modelBuilder.Entity<UserContactBook>()
                 .HasKey(u => u.UserId);
 
-            modelBuilder.Entity<AddressBookEntry>()
-                .HasKey(a => a.AddressBookEntryId);
+            modelBuilder.Entity<AddressBookEntity>()
+                .HasKey(a => a.AddressBookEntityId);
             // Configure the relationship between User and AddressBookEntry
-            modelBuilder.Entity<AddressBookEntry>()
+            modelBuilder.Entity<AddressBookEntity>()
                 .HasOne(abe => abe.UserContactBooks)
-                .WithMany(u => u.AddressBookEntries)
+                .WithMany(u => u.AddressBookEntities)
                 .HasForeignKey(abe => abe.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 

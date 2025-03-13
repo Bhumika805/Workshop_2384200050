@@ -17,6 +17,6 @@ namespace ModelLayer.Model
         public string Address { get; set; }
 
         // Navigation property for AddressBookEntries
-        public ICollection<AddressBookEntry> AddressBookEntries { get; set; }
+        public ICollection<AddressBookEntity> AddressBookEntities { get; set; }
     }
 }

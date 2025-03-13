@@ -8,19 +8,19 @@ namespace AddressBook.Controllers
     [ApiController]
     public class AddressBookController : ControllerBase
     {
-        private static List<AddressBookEntry> _contacts = new List<AddressBookEntry>();
+        private static List<AddressBookEntity> _contacts = new List<AddressBookEntity>();
         private static int _idCounter = 1;
 
         [HttpGet("GetMethod")]
-        public ActionResult<List<AddressBookEntry>> GetAllContacts()
+        public ActionResult<List<AddressBookEntity>> GetAllContacts()
         {
             return Ok(_contacts);
         }
 
         [HttpGet("Getbyid{id}")]
-        public ActionResult<AddressBookEntry> GetContactById(int id)
+        public ActionResult<AddressBookEntity> GetContactById(int id)
         {
-            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntryId == id);
+            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntityId == id);
             if (contact == null)
                 return NotFound(new { Message = "Contact not found" });
 
@@ -28,11 +28,11 @@ namespace AddressBook.Controllers
         }
 
         [HttpPost("PostMethod")]
-        public ActionResult<AddressBookEntry> AddContact([FromBody] AddressBookRequestDto request)
+        public ActionResult<AddressBookEntity> AddContact([FromBody] AddressBookRequestDTO request)
         {
-            var newContact = new AddressBookEntry
+            var newContact = new AddressBookEntity
             {
-                AddressBookEntryId = _idCounter++,
+                AddressBookEntityId = _idCounter++,
                 Name = request.Name,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
@@ -40,13 +40,13 @@ namespace AddressBook.Controllers
             };
 
             _contacts.Add(newContact);
-            return CreatedAtAction(nameof(GetContactById), new { id = newContact.AddressBookEntryId }, newContact);
+            return CreatedAtAction(nameof(GetContactById), new { id = newContact.AddressBookEntityId }, newContact);
         }
 
         [HttpPut("Putbyid{id}")]
-        public ActionResult<AddressBookEntry> UpdateContact(int id, [FromBody] AddressBookRequestDto request)
+        public ActionResult<AddressBookEntity> UpdateContact(int id, [FromBody] AddressBookRequestDTO request)
         {
-            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntryId == id);
+            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntityId == id);
             if (contact == null)
                 return NotFound(new { Message = "Contact not found" });
 
@@ -61,7 +61,7 @@ namespace AddressBook.Controllers
         [HttpDelete("Deletebyid{id}")]
         public IActionResult DeleteContact(int id)
         {
-            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntryId == id);
+            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntityId == id);
             if (contact == null)
                 return NotFound(new { Message = "Contact not found" });
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.Model
 {
-    public class AddressBookRequestDto
+    public class AddressBookRequestDTO
     {
         public string Name { get; set; }
         public string Email { get; set; }
