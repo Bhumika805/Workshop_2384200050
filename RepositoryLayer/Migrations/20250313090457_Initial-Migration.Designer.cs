@@ -11,7 +11,7 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(DbContextBook))]
-    [Migration("20250311053642_Initial-Migration")]
+    [Migration("20250313090457_Initial-Migration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,13 +23,13 @@ namespace RepositoryLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ModelLayer.Model.AddressBookEntry", b =>
+            modelBuilder.Entity("ModelLayer.Model.AddressBookEntity", b =>
                 {
-                    b.Property<int>("AddressBookEntryId")
+                    b.Property<int>("AddressBookEntityId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressBookEntryId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressBookEntityId"), 1L, 1);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -50,11 +50,11 @@ namespace RepositoryLayer.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("AddressBookEntryId");
+                    b.HasKey("AddressBookEntityId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AddressBookEntries");
+                    b.ToTable("AddressBookEntities");
                 });
 
             modelBuilder.Entity("ModelLayer.Model.UserContactBook", b =>
@@ -90,10 +90,10 @@ namespace RepositoryLayer.Migrations
                     b.ToTable("UserContactBooks");
                 });
 
-            modelBuilder.Entity("ModelLayer.Model.AddressBookEntry", b =>
+            modelBuilder.Entity("ModelLayer.Model.AddressBookEntity", b =>
                 {
                     b.HasOne("ModelLayer.Model.UserContactBook", "UserContactBooks")
-                        .WithMany("AddressBookEntries")
+                        .WithMany("AddressBookEntities")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -103,7 +103,7 @@ namespace RepositoryLayer.Migrations
 
             modelBuilder.Entity("ModelLayer.Model.UserContactBook", b =>
                 {
-                    b.Navigation("AddressBookEntries");
+                    b.Navigation("AddressBookEntities");
                 });
 #pragma warning restore 612, 618
         }

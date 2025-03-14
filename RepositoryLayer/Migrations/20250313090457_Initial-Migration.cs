@@ -26,10 +26,10 @@ namespace RepositoryLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AddressBookEntries",
+                name: "AddressBookEntities",
                 columns: table => new
                 {
-                    AddressBookEntryId = table.Column<int>(type: "int", nullable: false)
+                    AddressBookEntityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -39,9 +39,9 @@ namespace RepositoryLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AddressBookEntries", x => x.AddressBookEntryId);
+                    table.PrimaryKey("PK_AddressBookEntities", x => x.AddressBookEntityId);
                     table.ForeignKey(
-                        name: "FK_AddressBookEntries_UserContactBooks_UserId",
+                        name: "FK_AddressBookEntities_UserContactBooks_UserId",
                         column: x => x.UserId,
                         principalTable: "UserContactBooks",
                         principalColumn: "UserId",
@@ -49,15 +49,15 @@ namespace RepositoryLayer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AddressBookEntries_UserId",
-                table: "AddressBookEntries",
+                name: "IX_AddressBookEntities_UserId",
+                table: "AddressBookEntities",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AddressBookEntries");
+                name: "AddressBookEntities");
 
             migrationBuilder.DropTable(
                 name: "UserContactBooks");
