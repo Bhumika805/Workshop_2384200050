@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interface
 {
-    internal interface IAddressBookBL
+    public interface IAddressBookBL
     {
     }
 }

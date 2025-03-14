@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressBook", "AddressBook\AddressBook.csproj", "{56F02551-6D22-4801-80AC-FC5485B83E18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressBook", "AddressBook\AddressBook.csproj", "{56F02551-6D22-4801-80AC-FC5485B83E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{B7CEA72F-2D99-444E-9FAB-9794B8668732}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{B7CEA72F-2D99-444E-9FAB-9794B8668732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLayer", "ModelLayer\ModelLayer.csproj", "{7C39A2CD-6384-46F4-8F62-65BF966B1E16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelLayer", "ModelLayer\ModelLayer.csproj", "{7C39A2CD-6384-46F4-8F62-65BF966B1E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{2F2C10D4-ADDB-432E-B76A-7D507DBC4AAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{2F2C10D4-ADDB-432E-B76A-7D507DBC4AAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
