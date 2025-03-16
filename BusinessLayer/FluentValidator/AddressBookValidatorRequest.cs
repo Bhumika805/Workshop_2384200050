@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using ModelLayer.Model;
 
-namespace BusinessLayer.Validator
+namespace BusinessLayer.FluentValidator
 {
     public class AddressBookValidatorRequest : AbstractValidator<AddressBookRequestDTO>
     {

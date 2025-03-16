@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Mapping
+namespace BusinessLayer.Mappings
 {
     public class UserMapper : Profile
     {
