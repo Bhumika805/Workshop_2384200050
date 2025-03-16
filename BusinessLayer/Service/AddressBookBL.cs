@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using NLog;
+using Middleware.RabbitMQ;
 
 namespace BusinessLayer.Service
 {
@@ -17,15 +18,18 @@ namespace BusinessLayer.Service
         private readonly IMapper _mapper;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private const string CacheKey = "AllContacts";
+        private readonly RabbitMqService _rabbitMqPublisher;
 
-        public AddressBookBL(IAddressBookRL addressBookRL, ICacheService cacheService, IMapper mapper)
+        public AddressBookBL(IAddressBookRL addressBookRL, ICacheService cacheService, IMapper mapper , RabbitMqService rabbitMqPublisher)
         {
             _addressBookRL = addressBookRL ?? throw new ArgumentNullException(nameof(addressBookRL));
             _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _rabbitMqPublisher = rabbitMqPublisher;
+
         }
 
-        public IEnumerable<AddressBookEntry> GetAllContacts()
+        public IEnumerable<ModelLayer.Model.AddressBookEntry> GetAllContacts()
         {
             try
             {
@@ -33,15 +37,15 @@ namespace BusinessLayer.Service
                 var cacheData = _cacheService.GetCache(CacheKey);
                 if (!string.IsNullOrEmpty(cacheData))
                 {
-                    Console.WriteLine("Cache Hit! Returning from Cache.");
-                    return JsonSerializer.Deserialize<IEnumerable<AddressBookEntry>>(cacheData);
+                   // Console.WriteLine("Cache Hit! Returning from Cache.");
+                    return JsonSerializer.Deserialize<IEnumerable<ModelLayer.Model.AddressBookEntry>>(cacheData);
                 }
 
                 // Fetch from database
                 var contacts = _addressBookRL.GetAllContacts();
-                if (contacts == null) return new List<AddressBookEntry>();
+                if (contacts == null) return new List<ModelLayer.Model.AddressBookEntry>();
 
-                var mappedContacts = _mapper.Map<IEnumerable<AddressBookEntry>>(contacts);
+                var mappedContacts = _mapper.Map<IEnumerable<ModelLayer.Model.AddressBookEntry>>(contacts);
 
                 // Store in cache
                 var serializedData = JsonSerializer.Serialize(mappedContacts);
@@ -52,16 +56,16 @@ namespace BusinessLayer.Service
             catch (Exception ex)
             {
                 Logger.Error(ex, "Error in GetAllContacts");
-                return new List<AddressBookEntry>();
+                return new List<ModelLayer.Model.AddressBookEntry>();
             }
         }
 
-        public AddressBookEntry GetContactById(int id)
+        public ModelLayer.Model.AddressBookEntry GetContactById(int id)
         {
             try
             {
                 var contact = _addressBookRL.GetContactById(id);
-                return contact != null ? _mapper.Map<AddressBookEntry>(contact) : null;
+                return contact != null ? _mapper.Map<ModelLayer.Model.AddressBookEntry>(contact) : null;
             }
             catch (Exception ex)
             {
@@ -70,18 +74,23 @@ namespace BusinessLayer.Service
             }
         }
 
-        public AddressBookEntry AddContact(AddressBookRequestDTO contact)
+        public ModelLayer.Model.AddressBookEntry AddContact(AddressBookRequestDTO contact)
         {
             if (contact == null) throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
 
             try
             {
-                var entity = _mapper.Map<AddressBookEntity>(contact);
+                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
                 var newContact = _addressBookRL.AddContact(entity);
 
                 _cacheService.RemoveCache(CacheKey); // Invalidate cache
 
-                return _mapper.Map<AddressBookEntry>(newContact);
+                // Publish event to RabbitMQ
+                string message = $"New Contact Added: {contact.Name} - {contact.Email}";
+                _rabbitMqPublisher.PublishMessage(message);
+
+
+                return _mapper.Map<ModelLayer.Model.AddressBookEntry>(newContact);
             }
             catch (Exception ex)
             {
@@ -90,13 +99,13 @@ namespace BusinessLayer.Service
             }
         }
 
-        public AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
+        public ModelLayer.Model.AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
         {
             if (contact == null) throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
 
             try
             {
-                var entity = _mapper.Map<AddressBookEntity>(contact);
+                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
                 var updatedContact = _addressBookRL.UpdateContact(id, entity);
 
                 if (updatedContact == null)
@@ -106,7 +115,7 @@ namespace BusinessLayer.Service
 
                 _cacheService.RemoveCache(CacheKey); // Invalidate cache
 
-                return _mapper.Map<AddressBookEntry>(updatedContact);
+                return _mapper.Map<ModelLayer.Model.AddressBookEntry>(updatedContact);
             }
             catch (Exception ex)
             {
