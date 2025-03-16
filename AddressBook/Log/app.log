@@ -4,3 +4,68 @@
    at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.Set(String key, Byte[] value, DistributedCacheEntryOptions options)
    at BusinessLayer.Service.CacheService.SetCache(String key, String value, Int32 expirationInMinutes) in C:\Users\91870\source\repos\AddressBook\BusinessLayer\Service\CacheService.cs:line 23
    at BusinessLayer.Service.AddressBookBL.GetAllContacts() in C:\Users\91870\source\repos\AddressBook\BusinessLayer\Service\AddressBookBL.cs:line 52
+2025-03-15 14:14:42.9651 | Info | Starting Address Book API... 
+2025-03-15 14:14:48.1483 | Info | User profile is available. Using 'C:\Users\91870\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. 
+2025-03-15 14:14:48.1858 | Info | [RabbitMQ] Consumer Started 
+2025-03-15 14:14:54.8849 | Info | Now listening on: https://localhost:7265 
+2025-03-15 14:14:54.8849 | Info | Now listening on: http://localhost:5202 
+2025-03-15 14:14:55.0316 | Info | Application started. Press Ctrl+C to shut down. 
+2025-03-15 14:14:55.0316 | Info | Hosting environment: Development 
+2025-03-15 14:14:55.0316 | Info | Content root path: C:\Users\91870\source\repos\AddressBook\AddressBook\ 
+2025-03-15 14:15:13.9371 | Info | Request starting HTTP/2 GET https://localhost:7265/swagger/index.html - - 
+2025-03-15 14:15:14.9886 | Info | Request finished HTTP/2 GET https://localhost:7265/swagger/index.html - - - 200 - text/html;charset=utf-8 1060.7670ms 
+2025-03-15 14:15:18.1763 | Info | Request starting HTTP/2 GET https://localhost:7265/_framework/aspnetcore-browser-refresh.js - - 
+2025-03-15 14:15:18.1939 | Info | Request starting HTTP/2 GET https://localhost:7265/_vs/browserLink - - 
+2025-03-15 14:15:18.2648 | Info | Request finished HTTP/2 GET https://localhost:7265/_framework/aspnetcore-browser-refresh.js - - - 200 12354 application/javascript;+charset=utf-8 88.4937ms 
+2025-03-15 14:15:18.7824 | Info | Request finished HTTP/2 GET https://localhost:7265/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 588.4438ms 
+2025-03-15 14:15:19.1049 | Info | Request starting HTTP/2 GET https://localhost:7265/swagger/v1/swagger.json - - 
+2025-03-15 14:15:19.1341 | Info | Request finished HTTP/2 GET https://localhost:7265/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 29.4248ms 
+2025-03-15 14:27:57.2066 | Info | Request starting HTTP/2 GET https://localhost:7265/api/addressbook - - 
+2025-03-15 14:27:57.6945 | Info | Executing endpoint 'AddressBook.Controllers.AddressBookController.GetAllContacts (AddressBook)' 
+2025-03-15 14:27:57.7829 | Info | Route matched with {action = "GetAllContacts", controller = "AddressBook"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[ModelLayer.Model.ResponseBody`1[System.Collections.Generic.IEnumerable`1[ModelLayer.Model.ResponseAddressBook]]] GetAllContacts() on controller AddressBook.Controllers.AddressBookController (AddressBook). 
+2025-03-15 14:27:59.0612 | Info | Fetching all contacts. 
+2025-03-15 14:28:03.5127 | Info | Entity Framework Core 6.0.36 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.36' with options: None 
+2025-03-15 14:28:07.2749 | Info | Executed DbCommand (290ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [a].[Id], [a].[Address], [a].[Email], [a].[Name], [a].[PhoneNumber], [a].[UserId]
+FROM [AddressBookEntries] AS [a] 
+2025-03-15 14:28:07.7021 | Info | Executing OkObjectResult, writing value of type 'ModelLayer.Model.ResponseBody`1[[System.Collections.Generic.IEnumerable`1[[ModelLayer.Model.ResponseAddressBook, ModelLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'. 
+2025-03-15 14:28:07.7271 | Info | Executed action AddressBook.Controllers.AddressBookController.GetAllContacts (AddressBook) in 9933.0168ms 
+2025-03-15 14:28:07.7271 | Info | Executed endpoint 'AddressBook.Controllers.AddressBookController.GetAllContacts (AddressBook)' 
+2025-03-15 14:28:10.2161 | Info | Request finished HTTP/2 GET https://localhost:7265/api/addressbook - - - 200 - application/json;+charset=utf-8 13009.5588ms 
+2025-03-15 14:28:30.7123 | Info | Request starting HTTP/2 GET https://localhost:7265/api/addressbook - - 
+2025-03-15 14:28:30.7297 | Info | Executing endpoint 'AddressBook.Controllers.AddressBookController.GetAllContacts (AddressBook)' 
+2025-03-15 14:28:30.7297 | Info | Route matched with {action = "GetAllContacts", controller = "AddressBook"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[ModelLayer.Model.ResponseBody`1[System.Collections.Generic.IEnumerable`1[ModelLayer.Model.ResponseAddressBook]]] GetAllContacts() on controller AddressBook.Controllers.AddressBookController (AddressBook). 
+2025-03-15 14:28:30.7297 | Info | Fetching all contacts. 
+2025-03-15 14:28:30.7666 | Info | Executing OkObjectResult, writing value of type 'ModelLayer.Model.ResponseBody`1[[System.Collections.Generic.IEnumerable`1[[ModelLayer.Model.ResponseAddressBook, ModelLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'. 
+2025-03-15 14:28:30.7666 | Info | Executed action AddressBook.Controllers.AddressBookController.GetAllContacts (AddressBook) in 36.6266ms 
+2025-03-15 14:28:30.7693 | Info | Executed endpoint 'AddressBook.Controllers.AddressBookController.GetAllContacts (AddressBook)' 
+2025-03-15 14:28:30.7693 | Info | Request finished HTTP/2 GET https://localhost:7265/api/addressbook - - - 200 - application/json;+charset=utf-8 62.1941ms 
+2025-03-15 16:58:30.5657 | Info | Starting Address Book API... 
+2025-03-15 16:58:36.5489 | Info | User profile is available. Using 'C:\Users\91870\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. 
+2025-03-15 16:58:36.6108 | Info | [RabbitMQ] Consumer Started 
+2025-03-15 16:58:41.5207 | Info | Now listening on: https://localhost:7265 
+2025-03-15 16:58:41.5207 | Info | Now listening on: http://localhost:5202 
+2025-03-15 16:58:41.6764 | Info | Application started. Press Ctrl+C to shut down. 
+2025-03-15 16:58:41.6764 | Info | Hosting environment: Development 
+2025-03-15 16:58:41.6764 | Info | Content root path: C:\Users\91870\source\repos\AddressBook\AddressBook\ 
+2025-03-15 16:58:54.6282 | Info | Request starting HTTP/2 GET https://localhost:7265/swagger/index.html - - 
+2025-03-15 16:58:55.5328 | Info | Request finished HTTP/2 GET https://localhost:7265/swagger/index.html - - - 200 - text/html;charset=utf-8 913.6575ms 
+2025-03-15 16:58:55.5868 | Info | Request starting HTTP/2 GET https://localhost:7265/_framework/aspnetcore-browser-refresh.js - - 
+2025-03-15 16:58:55.6147 | Info | Request starting HTTP/2 GET https://localhost:7265/_vs/browserLink - - 
+2025-03-15 16:58:55.6147 | Info | Request finished HTTP/2 GET https://localhost:7265/_framework/aspnetcore-browser-refresh.js - - - 200 12354 application/javascript;+charset=utf-8 34.4522ms 
+2025-03-15 16:58:56.0406 | Info | Request finished HTTP/2 GET https://localhost:7265/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 425.7950ms 
+2025-03-15 16:58:56.2340 | Info | Request starting HTTP/2 GET https://localhost:7265/swagger/v1/swagger.json - - 
+2025-03-15 16:58:56.2505 | Info | Request finished HTTP/2 GET https://localhost:7265/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 16.5784ms 
+2025-03-15 16:59:17.1994 | Info | Request starting HTTP/2 GET https://localhost:7265/api/addressbook/get/10 - - 
+2025-03-15 16:59:17.6306 | Info | Executing endpoint 'AddressBook.Controllers.AddressBookController.GetContactById (AddressBook)' 
+2025-03-15 16:59:17.7638 | Info | Route matched with {action = "GetContactById", controller = "AddressBook"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[ModelLayer.Model.ResponseBody`1[ModelLayer.Model.ResponseAddressBook]] GetContactById(Int32) on controller AddressBook.Controllers.AddressBookController (AddressBook). 
+2025-03-15 16:59:18.9954 | Info | Fetching contact with ID 10 
+2025-03-15 16:59:21.8320 | Info | Entity Framework Core 6.0.36 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.36' with options: None 
+2025-03-15 16:59:26.8238 | Info | Executed DbCommand (391ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[Address], [a].[Email], [a].[Name], [a].[PhoneNumber], [a].[UserId]
+FROM [AddressBookEntries] AS [a]
+WHERE [a].[Id] = @__p_0 
+2025-03-15 16:59:27.1482 | Info | Executing OkObjectResult, writing value of type 'ModelLayer.Model.ResponseBody`1[[ModelLayer.Model.ResponseAddressBook, ModelLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'. 
+2025-03-15 16:59:27.1739 | Info | Executed action AddressBook.Controllers.AddressBookController.GetContactById (AddressBook) in 9398.2926ms 
+2025-03-15 16:59:27.1739 | Info | Executed endpoint 'AddressBook.Controllers.AddressBookController.GetContactById (AddressBook)' 
+2025-03-15 16:59:28.7984 | Info | Request finished HTTP/2 GET https://localhost:7265/api/addressbook/get/10 - - - 200 - application/json;+charset=utf-8 11599.1385ms 

@@ -13,9 +13,9 @@ namespace BusinessLayer.Mappings
     {
         public AutoMapperProfile()
         {
-            
-            CreateMap<AddressBookRequestDTO, AddressBookEntity>();
-            CreateMap<AddressBookEntity, AddressBookEntry>();
+
+            CreateMap<AddressBookRequestDTO, RepositoryLayer.Entity.AddressBookEntity>();
+            CreateMap<AddressBookEntry, AddressBookEntry>();
         }
     }
 }
