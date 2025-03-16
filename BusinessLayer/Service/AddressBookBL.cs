@@ -5,84 +5,112 @@ using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using NLog;
 
 namespace BusinessLayer.Service
 {
     public class AddressBookBL : IAddressBookBL
     {
         private readonly IAddressBookRL _addressBookRL;
+        private readonly ICacheService _cacheService;
         private readonly IMapper _mapper;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private const string CacheKey = "AllContacts";
 
-        public AddressBookBL(IAddressBookRL addressBookRL, IMapper mapper)
+        public AddressBookBL(IAddressBookRL addressBookRL, ICacheService cacheService, IMapper mapper)
         {
-            _addressBookRL = addressBookRL;
-            _mapper = mapper;
+            _addressBookRL = addressBookRL ?? throw new ArgumentNullException(nameof(addressBookRL));
+            _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public IEnumerable<ModelLayer.Model.AddressBookEntry> GetAllContacts()
+        public IEnumerable<AddressBookEntry> GetAllContacts()
         {
             try
             {
+                // Attempt to retrieve from cache
+                var cacheData = _cacheService.GetCache(CacheKey);
+                if (!string.IsNullOrEmpty(cacheData))
+                {
+                    Console.WriteLine("Cache Hit! Returning from Cache.");
+                    return JsonSerializer.Deserialize<IEnumerable<AddressBookEntry>>(cacheData);
+                }
+
+                // Fetch from database
                 var contacts = _addressBookRL.GetAllContacts();
-                return _mapper.Map<IEnumerable<ModelLayer.Model.AddressBookEntry>>(contacts);
+                if (contacts == null) return new List<AddressBookEntry>();
+
+                var mappedContacts = _mapper.Map<IEnumerable<AddressBookEntry>>(contacts);
+
+                // Store in cache
+                var serializedData = JsonSerializer.Serialize(mappedContacts);
+                _cacheService.SetCache(CacheKey, serializedData, 10);
+
+                return mappedContacts;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in GetAllContacts: {ex.Message}");
-                return null;
+                Logger.Error(ex, "Error in GetAllContacts");
+                return new List<AddressBookEntry>();
             }
         }
 
-        public ModelLayer.Model.AddressBookEntry GetContactById(int id)
+        public AddressBookEntry GetContactById(int id)
         {
             try
             {
                 var contact = _addressBookRL.GetContactById(id);
-                return contact == null ? null : _mapper.Map<ModelLayer.Model.AddressBookEntry>(contact);
+                return contact != null ? _mapper.Map<AddressBookEntry>(contact) : null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in GetContactById: {ex.Message}");
+                Logger.Error(ex, $"Error retrieving contact with ID: {id}");
                 return null;
             }
         }
 
-        public ModelLayer.Model.AddressBookEntry AddContact(AddressBookRequestDTO contact)
+        public AddressBookEntry AddContact(AddressBookRequestDTO contact)
         {
-            if (contact == null)
-            {
-                throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
-            }
+            if (contact == null) throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
 
             try
             {
-                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
+                var entity = _mapper.Map<AddressBookEntity>(contact);
                 var newContact = _addressBookRL.AddContact(entity);
-                return _mapper.Map<ModelLayer.Model.AddressBookEntry>(newContact);
+
+                _cacheService.RemoveCache(CacheKey); // Invalidate cache
+
+                return _mapper.Map<AddressBookEntry>(newContact);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in AddContact: {ex.Message}");
+                Logger.Error(ex, "Error adding new contact");
                 return null;
             }
         }
 
-        public ModelLayer.Model.AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
+        public AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
         {
-            if (contact == null)
-            {
-                throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
-            }
+            if (contact == null) throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
 
             try
             {
-                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
+                var entity = _mapper.Map<AddressBookEntity>(contact);
                 var updatedContact = _addressBookRL.UpdateContact(id, entity);
-                return updatedContact == null ? null : _mapper.Map<ModelLayer.Model.AddressBookEntry>(updatedContact);
+
+                if (updatedContact == null)
+                {
+                    return null; // Contact not found
+                }
+
+                _cacheService.RemoveCache(CacheKey); // Invalidate cache
+
+                return _mapper.Map<AddressBookEntry>(updatedContact);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in UpdateContact: {ex.Message}");
+                Logger.Error(ex, $"Error updating contact with ID: {id}");
                 return null;
             }
         }
@@ -91,11 +119,16 @@ namespace BusinessLayer.Service
         {
             try
             {
-                return _addressBookRL.DeleteContact(id);
+                bool isDeleted = _addressBookRL.DeleteContact(id);
+                if (isDeleted)
+                {
+                    _cacheService.RemoveCache(CacheKey);
+                }
+                return isDeleted;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in DeleteContact: {ex.Message}");
+                Logger.Error(ex, $"Error deleting contact with ID: {id}");
                 return false;
             }
         }
