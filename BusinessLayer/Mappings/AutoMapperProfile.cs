@@ -1,17 +1,21 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RepositoryLayer.Entity;
 using ModelLayer.Model;
 
-
-public class AutoMapperProfile : Profile
+namespace BusinessLayer.Mappings
 {
-    public AutoMapperProfile()
+    public class AutoMapperProfile : Profile
     {
-        // Map Entity to Model
-        CreateMap<AddressBookEntity, AddressBookEntry>();
-
-        // Map Model to Entity(for Create/Update)
-        CreateMap<AddressBookRequestDTO, AddressBookEntity>();
-
-        CreateMap<AddressBookEntry, AddressBookEntity>().ReverseMap();
+        public AutoMapperProfile()
+        {
+            
+            CreateMap<AddressBookEntry, AddressBookEntry>();
+            CreateMap<RepositoryLayer.Entity.AddressBookEntity, AddressBookResponseDTO>();
+        }
     }
 }

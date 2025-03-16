@@ -10,7 +10,7 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(DbContextBook))]
-    partial class DbContextBookModelSnapshot : ModelSnapshot
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -21,41 +21,42 @@ namespace RepositoryLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ModelLayer.Model.AddressBookEntity", b =>
+            modelBuilder.Entity("RepositoryLayer.Entity.AddressBookEntry", b =>
                 {
-                    b.Property<int>("AddressBookEntityId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressBookEntityId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("AddressBookEntityId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AddressBookEntities");
+                    b.ToTable("AddressBookEntries");
                 });
 
-            modelBuilder.Entity("ModelLayer.Model.UserContactBook", b =>
+            modelBuilder.Entity("RepositoryLayer.Entity.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -63,45 +64,39 @@ namespace RepositoryLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserContactBooks");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ModelLayer.Model.AddressBookEntity", b =>
+            modelBuilder.Entity("RepositoryLayer.Entity.AddressBookEntry", b =>
                 {
-                    b.HasOne("ModelLayer.Model.UserContactBook", "UserContactBooks")
-                        .WithMany("AddressBookEntities")
+                    b.HasOne("RepositoryLayer.Entity.User", "User")
+                        .WithMany("AddressBookEntries")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UserContactBooks");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ModelLayer.Model.UserContactBook", b =>
+            modelBuilder.Entity("RepositoryLayer.Entity.User", b =>
                 {
-                    b.Navigation("AddressBookEntities");
+                    b.Navigation("AddressBookEntries");
                 });
 #pragma warning restore 612, 618
         }

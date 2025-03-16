@@ -1,33 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ModelLayer.Model;
+using RepositoryLayer.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RepositoryLayer.Context
 {
     public class DbContextBook : DbContext
     {
+        public DbSet<UserContactBook> Users { get; set; }
+        public DbSet<AddressBookEntity> AddressBookEntries { get; set; }
+
         public DbContextBook(DbContextOptions<DbContextBook> options) : base(options) { }
 
-        public DbSet<UserContactBook> UserContactBooks { get; set; }
-
-        public DbSet<AddressBookEntity> AddressBookEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            //  Define primary keys explicitly
-            modelBuilder.Entity<UserContactBook>()
-                .HasKey(u => u.UserId);
-
             modelBuilder.Entity<AddressBookEntity>()
-                .HasKey(a => a.AddressBookEntityId);
-            // Configure the relationship between User and AddressBookEntry
-            modelBuilder.Entity<AddressBookEntity>()
-                .HasOne(abe => abe.UserContactBooks)
-                .WithMany(u => u.AddressBookEntities)
-                .HasForeignKey(abe => abe.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            base.OnModelCreating(modelBuilder);
+                .HasOne(ab => ab.UserContactBooks)
+                .WithMany(u => u.AddressBookEntries)
+                .HasForeignKey(ab => ab.UserId);
         }
-
     }
 }
