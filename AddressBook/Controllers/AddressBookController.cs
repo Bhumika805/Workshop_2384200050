@@ -1,165 +1,137 @@
-﻿using AutoMapper;
+using AutoMapper;
+using BusinessLayer.Interface;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Model;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AddressBook.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AddressBookController : ControllerBase
     {
-        private static List<AddressBookEntity> _contacts = new List<AddressBookEntity>();
-        private static int _idCounter = 1;
-        private readonly IMapper _mapper;
-        private readonly IValidator<AddressBookRequestDTO> _validator;
+        private readonly IAddressBookBL _addressBookBL;
+        private readonly IValidator<AddressBookEntry> _validator;
 
-<<<<<<< HEAD
-        [HttpGet("GetMethod")]
-        public ActionResult<List<AddressBookEntity>> GetAllContacts()
-=======
-        public AddressBookController(IMapper mapper, IValidator<AddressBookRequestDTO> validator)
->>>>>>> Section2_UC1
+        public AddressBookController(IAddressBookBL addressBookBL, IValidator<AddressBookEntry> validator)
         {
-            _mapper = mapper;
+            _addressBookBL = addressBookBL;
             _validator = validator;
         }
 
-<<<<<<< HEAD
-        [HttpGet("Getbyid{id}")]
-        public ActionResult<AddressBookEntity> GetContactById(int id)
+        [HttpGet]
+        public ActionResult<ResponseBody<IEnumerable<AddressBookResponseDTO>>> GetAllContacts()
         {
-            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntityId == id);
-=======
-        [HttpGet("GetMethod")]
-        public ActionResult<List<AddressBookEntity>> GetAllContacts()
-        {
-            var contactDtos = _mapper.Map<IEnumerable<AddressBookEntry>>(_contacts);
-            return Ok(new ResponseBody<IEnumerable<AddressBookEntry>>
+            var contacts = _addressBookBL.GetAllContacts();
+
+            return Ok(new ResponseBody<IEnumerable<AddressBookResponseDTO>>
             {
                 Success = true,
-                Message = "Contacts retrieved successfully",
-                Data = contactDtos
+                Message = "Contacts retrieved successfully.",
+                Data = contacts
             });
         }
 
-        [HttpGet("Getbyid/{id}")]
-        public ActionResult<ResponseBody<AddressBookEntry>> GetContactById(int id)
+        [HttpGet("{id}")]
+        public ActionResult<ResponseBody<AddressBookResponseDTO>> GetContactById(int id)
         {
-            var contact = _contacts.Find(c => c.AddressBookEntityId == id);
->>>>>>> Section2_UC1
+            var contact = _addressBookBL.GetContactById(id);
             if (contact == null)
-                return NotFound(new { Message = "Contact not found" });
-
-            var response = _mapper.Map<AddressBookEntry>(contact);
-            return Ok(new ResponseBody<AddressBookEntry>
             {
-                Success = true,
-                Message = "Contact retrieved successfully",
-                Data = response
-            });
-        }
-
-        [HttpPost("PostMethod")]
-<<<<<<< HEAD
-        public ActionResult<AddressBookEntity> AddContact([FromBody] AddressBookRequestDTO request)
-        {
-            var newContact = new AddressBookEntity
-            {
-                AddressBookEntityId = _idCounter++,
-                Name = request.Name,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                Address = request.Address
-            };
-
-            _contacts.Add(newContact);
-            return CreatedAtAction(nameof(GetContactById), new { id = newContact.AddressBookEntityId }, newContact);
-        }
-
-        [HttpPut("Putbyid{id}")]
-        public ActionResult<AddressBookEntity> UpdateContact(int id, [FromBody] AddressBookRequestDTO request)
-        {
-            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntityId == id);
-=======
-        public ActionResult<ResponseBody<AddressBookEntry>> AddContact([FromBody] AddressBookRequestDTO request)
-        {
-            var validationResult = _validator.Validate(request);
-            if (!validationResult.IsValid)
-                return BadRequest(new ResponseBody<AddressBookEntry>
+                return NotFound(new ResponseBody<AddressBookResponseDTO>
                 {
                     Success = false,
-                    Message = "Validation failed",
+                    Message = "Contact not found.",
                     Data = null
                 });
+            }
 
-            var newContact = _mapper.Map<AddressBookEntity>(request);
-            newContact.AddressBookEntityId = _idCounter++;
-
-            _contacts.Add(newContact);
-
-            var response = _mapper.Map<AddressBookEntry>(newContact);
-            return CreatedAtAction(nameof(GetContactById), new { id = newContact.AddressBookEntityId }, new ResponseBody<AddressBookEntry>
+            return Ok(new ResponseBody<AddressBookResponseDTO>
             {
                 Success = true,
-                Message = "Contact added successfully",
-                Data = response
+                Message = "Contact retrieved successfully.",
+                Data = contact
             });
         }
 
-        [HttpPut("Putbyid/{id}")]
-        public ActionResult<ResponseBody<AddressBookEntry>> UpdateContact(int id, [FromBody] AddressBookRequestDTO request)
+        [HttpPost]
+        public ActionResult<ResponseBody<AddressBookResponseDTO>> AddContact([FromBody] AddressBookEntry dto)
         {
-            var validationResult = _validator.Validate(request);
+            var validationResult = _validator.Validate(dto);
             if (!validationResult.IsValid)
-                return BadRequest(new ResponseBody<AddressBookEntry>
+            {
+                return BadRequest(new ResponseBody<object>
                 {
                     Success = false,
-                    Message = "Validation failed"
+                    Message = "Validation failed.",
+                    Data = validationResult.Errors.Select(e => e.ErrorMessage)
                 });
+            }
 
-            var contact = _contacts.Find(c => c.AddressBookEntityId == id);
->>>>>>> Section2_UC1
-            if (contact == null)
-                return NotFound(new ResponseBody<AddressBookEntry>
-                {
-                    Success = false,
-                    Message = $"Contact with ID {id} not found"
-                });
+            var newContact = _addressBookBL.AddContact(dto);
 
-            _mapper.Map(request, contact);
-            var response = _mapper.Map<AddressBookEntry>(contact);
-
-            return Ok(new ResponseBody<AddressBookEntry>
+            return CreatedAtAction(nameof(GetContactById), new { id = newContact.Id }, new ResponseBody<AddressBookResponseDTO>
             {
                 Success = true,
-                Message = "Contact updated successfully",
-                Data = response
+                Message = "Contact added successfully.",
+                Data = newContact
             });
         }
 
-        [HttpDelete("Deletebyid/{id}")]
+        [HttpPut("{id}")]
+        public ActionResult<ResponseBody<AddressBookResponseDTO>> UpdateContact(int id, [FromBody] AddressBookEntry dto)
+        {
+            var validationResult = _validator.Validate(dto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new ResponseBody<object>
+                {
+                    Success = false,
+                    Message = "Validation failed.",
+                    Data = validationResult.Errors.Select(e => e.ErrorMessage)
+                });
+            }
+
+            var updatedContact = _addressBookBL.UpdateContact(id, dto);
+            if (updatedContact == null)
+            {
+                return NotFound(new ResponseBody<AddressBookResponseDTO>
+                {
+                    Success = false,
+                    Message = "Contact not found.",
+                    Data = null
+                });
+            }
+
+            return Ok(new ResponseBody<AddressBookResponseDTO>
+            {
+                Success = true,
+                Message = "Contact updated successfully.",
+                Data = updatedContact
+            });
+        }
+
+        [HttpDelete("{id}")]
         public ActionResult<ResponseBody<string>> DeleteContact(int id)
         {
-<<<<<<< HEAD
-            var contact = _contacts.FirstOrDefault(c => c.AddressBookEntityId == id);
-=======
-            var contact = _contacts.Find(c => c.AddressBookEntityId == id);
->>>>>>> Section2_UC1
-            if (contact == null)
+            var isDeleted = _addressBookBL.DeleteContact(id);
+            if (!isDeleted)
+            {
                 return NotFound(new ResponseBody<string>
                 {
                     Success = false,
-                    Message = $"Contact with ID {id} not found"
+                    Message = "Contact not found.",
+                    Data = null
                 });
+            }
 
-            _contacts.Remove(contact);
             return Ok(new ResponseBody<string>
             {
                 Success = true,
-                Message = "Contact deleted successfully",
-                Data = $"Deleted contact ID: {id}"
+                Message = "Contact deleted successfully.",
+                Data = "Deleted"
             });
         }
     }

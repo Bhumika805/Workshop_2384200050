@@ -1,67 +1,56 @@
-﻿using FluentValidation;
+using BusinessLayer.Interface;
+using BusinessLayer.Mappings;
+using BusinessLayer.Service;
+using BusinessLayer.FluentValidator;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Model;
 using RepositoryLayer.Context;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Service;
-using BusinessLayer.Interface;
-using BusinessLayer.Service;
-using Microsoft.OpenApi.Models;
-using AutoMapper;
-using BusinessLayer.FluentValidator; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Database Connection
+var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<DbContextBook>(options => options.UseSqlServer(connectionString));
 
-
-// Register FluentValidation
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<AddressBookValidatorRequest>();
-
-// Register AutoMapper
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
-var mapperConfig = new MapperConfiguration(cfg =>
-{
-    cfg.CreateMap<AddressBookEntity, AddressBookEntry>().ReverseMap();
-    cfg.CreateMap<AddressBookRequestDTO, AddressBookEntity>().ReverseMap();
-});
-var mapper = mapperConfig.CreateMapper();
-builder.Services.AddSingleton(mapper);
-
-// Register Services
+// Register Services and Repositories
 builder.Services.AddScoped<IAddressBookBL, AddressBookBL>();
 builder.Services.AddScoped<IAddressBookRL, AddressBookRL>();
 
-// Add Controllers & Swagger
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();   
+builder.Services.AddScoped<IValidator<AddressBookEntry>, AddressBookValidatorRequest>();
+// Add services to the container.
+
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Address Book API",
-        Version = "v1",
-        Description = "An API for managing address book contacts"
-    });
-});
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<DbContextBook>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
 
 var app = builder.Build();
 
-app.UseRouting();
-app.UseHttpsRedirection(); // Only once
-app.UseAuthorization(); // Only once
 
-// Enable Swagger in Development Mode
+
+
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

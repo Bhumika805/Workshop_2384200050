@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ModelLayer.Model
+namespace RepositoryLayer.Entity
 {
     public class AddressBookEntity
     {
-        [Key]  //  Ensure AddressBookEntryId is a primary key
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AddressBookEntityId { get; set; }
+        public int Id { get; set; }
 
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Address { get; set; }
+        [Required, MaxLength(100)]
+        public string? Name { get; set; }
 
-        // Foreign key
+        [Required, Phone, MaxLength(15)]
+        public string? PhoneNumber { get; set; }
+
+        [EmailAddress, MaxLength(255)]
+        public string? Email { get; set; }
+
+        public string? Address { get; set; }
+
+
+        [Required]
+        [ForeignKey("User")] // Defines UserId as a foreign key to the User table
         public int UserId { get; set; }
 
-        // Navigation property
-        [ForeignKey("UserId")]
-        public UserContactBook UserContactBooks { get; set; }
+        // Navigation property to establish the relationship
+        public virtual UserContactBook UserContactBooks { get; set; }
     }
 }
