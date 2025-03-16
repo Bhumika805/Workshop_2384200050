@@ -13,9 +13,9 @@ namespace BusinessLayer.Mapping
     {
         public UserMapper()
         {
-            CreateMap<User, UserModel>();
-            CreateMap<User, RegisterUserDTO>().ReverseMap();
-            CreateMap<User, UserModel>().ReverseMap();
+            CreateMap<UserContactBooks, UserModel>();
+            CreateMap<UserContactBooks, RegisterUserDTO>().ReverseMap();
+            CreateMap<UserContactBooks, UserModel>().ReverseMap();
             
         }
     }

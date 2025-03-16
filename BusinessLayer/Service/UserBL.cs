@@ -36,7 +36,7 @@ namespace BusinessLayer.Service
                     return false; // User already exists
 
                 // Map DTO to Entity
-                var user = _mapper.Map<User>(request);
+                var user = _mapper.Map<UserContactBooks>(request);
                 user.PasswordHash = PasswordHelper.HashPassword(request.Password);
 
                 _userRepository.AddUser(user);
