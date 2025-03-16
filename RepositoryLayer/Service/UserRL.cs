@@ -19,7 +19,7 @@ namespace RepositoryLayer.Service
             _context = context;
         }
 
-        public User? GetUserByEmail(string email)
+        public UserContactBook? GetUserByEmail(string email)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public void AddUser(User user)
+        public void AddUser(UserContactBook user)
         {
             try
             {
@@ -43,6 +43,12 @@ namespace RepositoryLayer.Service
             {
                 Console.WriteLine($"[AddUser] Error: {ex.Message}");
             }
+        }
+
+        public void UpdateUser(UserContactBook user)
+        {
+            _context.Users.Update(user);
+            _context.SaveChanges();
         }
     }
 }
