@@ -9,24 +9,24 @@ using System.Linq;
 namespace AddressBook.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/addressbook")]
     public class AddressBookController : ControllerBase
     {
         private readonly IAddressBookBL _addressBookBL;
-        private readonly IValidator<AddressBookEntry> _validator;
+        private readonly IValidator<AddressBookRequestDTO> _validator;
 
-        public AddressBookController(IAddressBookBL addressBookBL, IValidator<AddressBookEntry> validator)
+        public AddressBookController(IAddressBookBL addressBookBL, IValidator<AddressBookRequestDTO> validator)
         {
             _addressBookBL = addressBookBL;
             _validator = validator;
         }
 
+        // GET: Fetch all contacts
         [HttpGet]
-        public ActionResult<ResponseBody<IEnumerable<AddressBookRequestDTO>>> GetAllContacts()
+        public ActionResult<ResponseBody<IEnumerable<AddressBookEntry>>> GetAllContacts()
         {
             var contacts = _addressBookBL.GetAllContacts();
-
-            return Ok(new ResponseBody<IEnumerable<AddressBookRequestDTO>>
+            return Ok(new ResponseBody<IEnumerable<AddressBookEntry>>
             {
                 Success = true,
                 Message = "Contacts retrieved successfully.",
@@ -34,21 +34,22 @@ namespace AddressBook.Controllers
             });
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<ResponseBody<AddressBookRequestDTO>> GetContactById(int id)
+        // GET: Fetch contact by ID
+        [HttpGet("get/{id}")]
+        public ActionResult<ResponseBody<AddressBookEntry>> GetContactById(int id)
         {
             var contact = _addressBookBL.GetContactById(id);
             if (contact == null)
             {
-                return NotFound(new ResponseBody<AddressBookRequestDTO>
+                return NotFound(new ResponseBody<AddressBookEntry>
                 {
                     Success = false,
-                    Message = "Contact not found.",
+                    Message = $"Contact with ID {id} not found.",
                     Data = null
                 });
             }
 
-            return Ok(new ResponseBody<AddressBookRequestDTO>
+            return Ok(new ResponseBody<AddressBookEntry>
             {
                 Success = true,
                 Message = "Contact retrieved successfully.",
@@ -56,8 +57,9 @@ namespace AddressBook.Controllers
             });
         }
 
-        [HttpPost]
-        public ActionResult<ResponseBody<AddressBookRequestDTO>> AddContact([FromBody] AddressBookEntry dto)
+        // POST: Add new contact
+        [HttpPost("add")]
+        public ActionResult<ResponseBody<AddressBookEntry>> AddContact([FromBody] AddressBookRequestDTO dto)
         {
             var validationResult = _validator.Validate(dto);
             if (!validationResult.IsValid)
@@ -71,8 +73,7 @@ namespace AddressBook.Controllers
             }
 
             var newContact = _addressBookBL.AddContact(dto);
-
-            return CreatedAtAction(nameof(GetContactById), new { id = newContact.Id }, new ResponseBody<AddressBookRequestDTO>
+            return CreatedAtAction(nameof(GetContactById), new { id = newContact.Id }, new ResponseBody<AddressBookEntry>
             {
                 Success = true,
                 Message = "Contact added successfully.",
@@ -80,8 +81,9 @@ namespace AddressBook.Controllers
             });
         }
 
-        [HttpPut("{id}")]
-        public ActionResult<ResponseBody<AddressBookRequestDTO>> UpdateContact(int id, [FromBody] AddressBookEntry dto)
+        // PUT: Update contact
+        [HttpPut("update/{id}")]
+        public ActionResult<ResponseBody<AddressBookEntry>> UpdateContact(int id, [FromBody] AddressBookRequestDTO dto)
         {
             var validationResult = _validator.Validate(dto);
             if (!validationResult.IsValid)
@@ -97,15 +99,15 @@ namespace AddressBook.Controllers
             var updatedContact = _addressBookBL.UpdateContact(id, dto);
             if (updatedContact == null)
             {
-                return NotFound(new ResponseBody<AddressBookRequestDTO>
+                return NotFound(new ResponseBody<AddressBookEntry>
                 {
                     Success = false,
-                    Message = "Contact not found.",
+                    Message = $"Contact with ID {id} not found.",
                     Data = null
                 });
             }
 
-            return Ok(new ResponseBody<AddressBookRequestDTO>
+            return Ok(new ResponseBody<AddressBookEntry>
             {
                 Success = true,
                 Message = "Contact updated successfully.",
@@ -113,7 +115,8 @@ namespace AddressBook.Controllers
             });
         }
 
-        [HttpDelete("{id}")]
+        // DELETE: Delete contact
+        [HttpDelete("delete/{id}")]
         public ActionResult<ResponseBody<string>> DeleteContact(int id)
         {
             var isDeleted = _addressBookBL.DeleteContact(id);
@@ -122,7 +125,7 @@ namespace AddressBook.Controllers
                 return NotFound(new ResponseBody<string>
                 {
                     Success = false,
-                    Message = "Contact not found.",
+                    Message = $"Contact with ID {id} not found.",
                     Data = null
                 });
             }

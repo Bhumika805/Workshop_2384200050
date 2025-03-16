@@ -1,13 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ModelLayer.Model;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RepositoryLayer.Service
 {
@@ -20,51 +16,24 @@ namespace RepositoryLayer.Service
             _dbContext = dbContext;
         }
 
-        public IEnumerable<AddressBookRequestDTO> GetAllContacts()
+        public IEnumerable<AddressBookEntity> GetAllContacts()
         {
-            return _dbContext.AddressBookEntries
-                .Select(entry => new AddressBookRequestDTO
-                {
-                    Id = entry.Id,
-                    Name = entry.Name,
-                    Email = entry.Email,
-                    PhoneNumber = entry.PhoneNumber,
-                    Address = entry.Address
-                }).ToList();
+            return _dbContext.AddressBookEntries.ToList();
         }
 
-        public AddressBookRequestDTO GetContactById(int id)
+        public AddressBookEntity GetContactById(int id)
         {
-            var entry = _dbContext.AddressBookEntries.Find(id);
-            if (entry == null) return null;
-
-            return new AddressBookRequestDTO
-            {
-                Id = entry.Id,
-                Name = entry.Name,
-                Email = entry.Email,
-                PhoneNumber = entry.PhoneNumber,
-                Address = entry.Address
-            };
+            return _dbContext.AddressBookEntries.Find(id);
         }
 
-        public AddressBookRequestDTO AddContact(Entity.AddressBookEntity contact)
+        public AddressBookEntity AddContact(AddressBookEntity contact)
         {
             _dbContext.AddressBookEntries.Add(contact);
             _dbContext.SaveChanges();
-
-            return new AddressBookRequestDTO
-            {
-                Id = contact.Id,
-                Name = contact.Name,
-                PhoneNumber = contact.PhoneNumber,
-                Email = contact.Email,
-                Address = contact.Address
-            };
-       
+            return contact;
         }
 
-        public AddressBookRequestDTO UpdateContact(int id, Entity.AddressBookEntity contact)
+        public AddressBookEntity UpdateContact(int id, AddressBookEntity contact)
         {
             var existingContact = _dbContext.AddressBookEntries.FirstOrDefault(c => c.Id == id);
 
@@ -81,15 +50,7 @@ namespace RepositoryLayer.Service
 
             _dbContext.AddressBookEntries.Update(existingContact);
             _dbContext.SaveChanges();
-
-            return new AddressBookRequestDTO
-            {
-                Id = existingContact.Id,
-                Name = existingContact.Name,
-                PhoneNumber = existingContact.PhoneNumber,
-                Email = existingContact.Email,
-                Address = existingContact.Address
-            };
+            return existingContact;
         }
 
         public bool DeleteContact(int id)
@@ -103,4 +64,3 @@ namespace RepositoryLayer.Service
         }
     }
 }
-

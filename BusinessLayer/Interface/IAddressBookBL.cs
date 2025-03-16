@@ -10,10 +10,10 @@ namespace BusinessLayer.Interface
 {
     public interface IAddressBookBL
     {
-        IEnumerable<AddressBookRequestDTO> GetAllContacts();
-        AddressBookRequestDTO GetContactById(int id);
-        AddressBookRequestDTO AddContact(ModelLayer.Model.AddressBookEntry contact);
-        AddressBookRequestDTO UpdateContact(int id, ModelLayer.Model.AddressBookEntry contact);
+        IEnumerable<ModelLayer.Model.AddressBookEntry> GetAllContacts();
+        ModelLayer.Model.AddressBookEntry GetContactById(int id);
+        ModelLayer.Model.AddressBookEntry AddContact(AddressBookRequestDTO contact);
+        ModelLayer.Model.AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact);
         bool DeleteContact(int id);
     }
 }
