@@ -1,1 +1,6 @@
-﻿
+﻿2025-03-15 11:51:21.8589 | Error | Error in GetAllContacts System.TimeoutException: The operation has timed out.
+   at StackExchange.Redis.ConnectionMultiplexer.WaitAll(Task[] tasks) in /_/src/StackExchange.Redis/ConnectionMultiplexer.cs:line 437
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.SetImpl(String key, ReadOnlySequence`1 value, DistributedCacheEntryOptions options)
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.Set(String key, Byte[] value, DistributedCacheEntryOptions options)
+   at BusinessLayer.Service.CacheService.SetCache(String key, String value, Int32 expirationInMinutes) in C:\Users\91870\source\repos\AddressBook\BusinessLayer\Service\CacheService.cs:line 23
+   at BusinessLayer.Service.AddressBookBL.GetAllContacts() in C:\Users\91870\source\repos\AddressBook\BusinessLayer\Service\AddressBookBL.cs:line 52

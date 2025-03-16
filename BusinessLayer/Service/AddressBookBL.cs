@@ -29,7 +29,7 @@ namespace BusinessLayer.Service
 
         }
 
-        public IEnumerable<ModelLayer.Model.AddressBookEntry> GetAllContacts()
+        public IEnumerable<AddressBookEntry> GetAllContacts()
         {
             try
             {
@@ -38,14 +38,14 @@ namespace BusinessLayer.Service
                 if (!string.IsNullOrEmpty(cacheData))
                 {
                    // Console.WriteLine("Cache Hit! Returning from Cache.");
-                    return JsonSerializer.Deserialize<IEnumerable<ModelLayer.Model.AddressBookEntry>>(cacheData);
+                    return JsonSerializer.Deserialize<IEnumerable<AddressBookEntry>>(cacheData);
                 }
 
                 // Fetch from database
                 var contacts = _addressBookRL.GetAllContacts();
-                if (contacts == null) return new List<ModelLayer.Model.AddressBookEntry>();
+                if (contacts == null) return new List<AddressBookEntry>();
 
-                var mappedContacts = _mapper.Map<IEnumerable<ModelLayer.Model.AddressBookEntry>>(contacts);
+                var mappedContacts = _mapper.Map<IEnumerable<AddressBookEntry>>(contacts);
 
                 // Store in cache
                 var serializedData = JsonSerializer.Serialize(mappedContacts);
@@ -56,16 +56,16 @@ namespace BusinessLayer.Service
             catch (Exception ex)
             {
                 Logger.Error(ex, "Error in GetAllContacts");
-                return new List<ModelLayer.Model.AddressBookEntry>();
+                return new List<AddressBookEntry>();
             }
         }
 
-        public ModelLayer.Model.AddressBookEntry GetContactById(int id)
+        public AddressBookEntry GetContactById(int id)
         {
             try
             {
                 var contact = _addressBookRL.GetContactById(id);
-                return contact != null ? _mapper.Map<ModelLayer.Model.AddressBookEntry>(contact) : null;
+                return contact != null ? _mapper.Map<AddressBookEntry>(contact) : null;
             }
             catch (Exception ex)
             {
@@ -74,13 +74,13 @@ namespace BusinessLayer.Service
             }
         }
 
-        public ModelLayer.Model.AddressBookEntry AddContact(AddressBookRequestDTO contact)
+        public AddressBookEntry AddContact(AddressBookRequestDTO contact)
         {
             if (contact == null) throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
 
             try
             {
-                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
+                var entity = _mapper.Map<AddressBookEntity>(contact);
                 var newContact = _addressBookRL.AddContact(entity);
 
                 _cacheService.RemoveCache(CacheKey); // Invalidate cache
@@ -90,7 +90,7 @@ namespace BusinessLayer.Service
                 _rabbitMqPublisher.PublishMessage(message);
 
 
-                return _mapper.Map<ModelLayer.Model.AddressBookEntry>(newContact);
+                return _mapper.Map<AddressBookEntry>(newContact);
             }
             catch (Exception ex)
             {
@@ -99,13 +99,13 @@ namespace BusinessLayer.Service
             }
         }
 
-        public ModelLayer.Model.AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
+        public AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
         {
             if (contact == null) throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
 
             try
             {
-                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
+                var entity = _mapper.Map<AddressBookEntity>(contact);
                 var updatedContact = _addressBookRL.UpdateContact(id, entity);
 
                 if (updatedContact == null)
@@ -115,7 +115,7 @@ namespace BusinessLayer.Service
 
                 _cacheService.RemoveCache(CacheKey); // Invalidate cache
 
-                return _mapper.Map<ModelLayer.Model.AddressBookEntry>(updatedContact);
+                return _mapper.Map<AddressBookEntry>(updatedContact);
             }
             catch (Exception ex)
             {
