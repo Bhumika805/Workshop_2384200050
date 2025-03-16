@@ -9,7 +9,9 @@ namespace RepositoryLayer.Interface
 {
     public interface IUserRL
     {
-        UserContactBooks? GetUserByEmail(string email);
-        void AddUser(UserContactBooks user);
+        UserContactBook? GetUserByEmail(string email);
+        void AddUser(UserContactBook user);
+
+        void UpdateUser(UserContactBook user);
     }
 }

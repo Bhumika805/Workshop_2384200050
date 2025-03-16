@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer.Entity
 {
-    public class UserContactBooks
+    public class UserContactBook
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

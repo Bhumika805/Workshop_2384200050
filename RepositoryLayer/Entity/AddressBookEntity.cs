@@ -31,6 +31,6 @@ namespace RepositoryLayer.Entity
         public int UserId { get; set; }
 
         // Navigation property to establish the relationship
-        public virtual UserContactBooks UserContactBooks { get; set; }
+        public virtual UserContactBook UserContactBooks { get; set; }
     }
 }

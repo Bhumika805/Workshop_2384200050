@@ -11,7 +11,7 @@ namespace RepositoryLayer.Context
 {
     public class DbContextBook : DbContext
     {
-        public DbSet<UserContactBooks> Users { get; set; }
+        public DbSet<UserContactBook> UserContactBooks { get; set; }
         public DbSet<AddressBookEntity> AddressBookEntries { get; set; }
 
         public DbContextBook(DbContextOptions<DbContextBook> options) : base(options) { }

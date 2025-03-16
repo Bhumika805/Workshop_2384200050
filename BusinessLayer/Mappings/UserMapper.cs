@@ -7,16 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Mapping
+namespace BusinessLayer.Mappings
 {
     public class UserMapper : Profile
     {
         public UserMapper()
         {
-            CreateMap<UserContactBooks, UserModel>();
-            CreateMap<UserContactBooks, RegisterUserDTO>().ReverseMap();
-            CreateMap<UserContactBooks, UserModel>().ReverseMap();
-            
+            CreateMap<UserContactBook, UserModel>();
+            CreateMap<UserContactBook, RegisterUserDTO>().ReverseMap();
+            CreateMap<UserContactBook, UserModel>().ReverseMap();
+
         }
     }
 }

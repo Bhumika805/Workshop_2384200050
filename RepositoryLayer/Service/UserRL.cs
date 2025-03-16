@@ -19,11 +19,11 @@ namespace RepositoryLayer.Service
             _context = context;
         }
 
-        public UserContactBooks? GetUserByEmail(string email)
+        public UserContactBook? GetUserByEmail(string email)
         {
             try
             {
-                return _context.Users.AsNoTracking().FirstOrDefault(u => u.Email == email);
+                return _context.UserContactBooks.AsNoTracking().FirstOrDefault(u => u.Email == email);
             }
             catch (Exception ex)
             {
@@ -32,17 +32,23 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public void AddUser(UserContactBooks user)
+        public void AddUser(UserContactBook user)
         {
             try
             {
-                _context.Users.Add(user);
+                _context.UserContactBooks.Add(user);
                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[AddUser] Error: {ex.Message}");
             }
+        }
+
+        public void UpdateUser(UserContactBook user)
+        {
+            _context.UserContactBooks.Update(user);
+            _context.SaveChanges();
         }
     }
 }
