@@ -22,11 +22,11 @@ namespace AddressBook.Controllers
         }
 
         [HttpGet]
-        public ActionResult<ResponseBody<IEnumerable<AddressBookResponseDTO>>> GetAllContacts()
+        public ActionResult<ResponseBody<IEnumerable<AddressBookRequestDTO>>> GetAllContacts()
         {
             var contacts = _addressBookBL.GetAllContacts();
 
-            return Ok(new ResponseBody<IEnumerable<AddressBookResponseDTO>>
+            return Ok(new ResponseBody<IEnumerable<AddressBookRequestDTO>>
             {
                 Success = true,
                 Message = "Contacts retrieved successfully.",
@@ -35,12 +35,12 @@ namespace AddressBook.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ResponseBody<AddressBookResponseDTO>> GetContactById(int id)
+        public ActionResult<ResponseBody<AddressBookRequestDTO>> GetContactById(int id)
         {
             var contact = _addressBookBL.GetContactById(id);
             if (contact == null)
             {
-                return NotFound(new ResponseBody<AddressBookResponseDTO>
+                return NotFound(new ResponseBody<AddressBookRequestDTO>
                 {
                     Success = false,
                     Message = "Contact not found.",
@@ -48,7 +48,7 @@ namespace AddressBook.Controllers
                 });
             }
 
-            return Ok(new ResponseBody<AddressBookResponseDTO>
+            return Ok(new ResponseBody<AddressBookRequestDTO>
             {
                 Success = true,
                 Message = "Contact retrieved successfully.",
@@ -57,7 +57,7 @@ namespace AddressBook.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ResponseBody<AddressBookResponseDTO>> AddContact([FromBody] AddressBookEntry dto)
+        public ActionResult<ResponseBody<AddressBookRequestDTO>> AddContact([FromBody] AddressBookEntry dto)
         {
             var validationResult = _validator.Validate(dto);
             if (!validationResult.IsValid)
@@ -72,7 +72,7 @@ namespace AddressBook.Controllers
 
             var newContact = _addressBookBL.AddContact(dto);
 
-            return CreatedAtAction(nameof(GetContactById), new { id = newContact.Id }, new ResponseBody<AddressBookResponseDTO>
+            return CreatedAtAction(nameof(GetContactById), new { id = newContact.Id }, new ResponseBody<AddressBookRequestDTO>
             {
                 Success = true,
                 Message = "Contact added successfully.",
@@ -81,7 +81,7 @@ namespace AddressBook.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ResponseBody<AddressBookResponseDTO>> UpdateContact(int id, [FromBody] AddressBookEntry dto)
+        public ActionResult<ResponseBody<AddressBookRequestDTO>> UpdateContact(int id, [FromBody] AddressBookEntry dto)
         {
             var validationResult = _validator.Validate(dto);
             if (!validationResult.IsValid)
@@ -97,7 +97,7 @@ namespace AddressBook.Controllers
             var updatedContact = _addressBookBL.UpdateContact(id, dto);
             if (updatedContact == null)
             {
-                return NotFound(new ResponseBody<AddressBookResponseDTO>
+                return NotFound(new ResponseBody<AddressBookRequestDTO>
                 {
                     Success = false,
                     Message = "Contact not found.",
@@ -105,7 +105,7 @@ namespace AddressBook.Controllers
                 });
             }
 
-            return Ok(new ResponseBody<AddressBookResponseDTO>
+            return Ok(new ResponseBody<AddressBookRequestDTO>
             {
                 Success = true,
                 Message = "Contact updated successfully.",

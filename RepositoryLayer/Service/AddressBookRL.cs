@@ -20,10 +20,10 @@ namespace RepositoryLayer.Service
             _dbContext = dbContext;
         }
 
-        public IEnumerable<AddressBookResponseDTO> GetAllContacts()
+        public IEnumerable<AddressBookRequestDTO> GetAllContacts()
         {
             return _dbContext.AddressBookEntries
-                .Select(entry => new AddressBookResponseDTO
+                .Select(entry => new AddressBookRequestDTO
                 {
                     Id = entry.Id,
                     Name = entry.Name,
@@ -33,12 +33,12 @@ namespace RepositoryLayer.Service
                 }).ToList();
         }
 
-        public AddressBookResponseDTO GetContactById(int id)
+        public AddressBookRequestDTO GetContactById(int id)
         {
             var entry = _dbContext.AddressBookEntries.Find(id);
             if (entry == null) return null;
 
-            return new AddressBookResponseDTO
+            return new AddressBookRequestDTO
             {
                 Id = entry.Id,
                 Name = entry.Name,
@@ -48,12 +48,12 @@ namespace RepositoryLayer.Service
             };
         }
 
-        public AddressBookResponseDTO AddContact(Entity.AddressBookEntity contact)
+        public AddressBookRequestDTO AddContact(Entity.AddressBookEntity contact)
         {
             _dbContext.AddressBookEntries.Add(contact);
             _dbContext.SaveChanges();
 
-            return new AddressBookResponseDTO
+            return new AddressBookRequestDTO
             {
                 Id = contact.Id,
                 Name = contact.Name,
@@ -64,7 +64,7 @@ namespace RepositoryLayer.Service
        
         }
 
-        public AddressBookResponseDTO UpdateContact(int id, Entity.AddressBookEntity contact)
+        public AddressBookRequestDTO UpdateContact(int id, Entity.AddressBookEntity contact)
         {
             var existingContact = _dbContext.AddressBookEntries.FirstOrDefault(c => c.Id == id);
 
@@ -82,7 +82,7 @@ namespace RepositoryLayer.Service
             _dbContext.AddressBookEntries.Update(existingContact);
             _dbContext.SaveChanges();
 
-            return new AddressBookResponseDTO
+            return new AddressBookRequestDTO
             {
                 Id = existingContact.Id,
                 Name = existingContact.Name,
