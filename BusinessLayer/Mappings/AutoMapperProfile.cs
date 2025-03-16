@@ -15,7 +15,7 @@ namespace BusinessLayer.Mappings
         {
             
             CreateMap<AddressBookEntry, AddressBookEntry>();
-            CreateMap<RepositoryLayer.Entity.AddressBookEntity, AddressBookResponseDTO>();
+            CreateMap<RepositoryLayer.Entity.AddressBookEntity, AddressBookRequestDTO>();
         }
     }
 }

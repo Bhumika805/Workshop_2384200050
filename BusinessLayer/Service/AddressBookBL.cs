@@ -22,34 +22,34 @@ namespace BusinessLayer.Service
             _mapper = mapper;
         }
 
-        public IEnumerable<AddressBookResponseDTO> GetAllContacts()
+        public IEnumerable<AddressBookRequestDTO> GetAllContacts()
         {
             var contacts = _addressBookRL.GetAllContacts();
 
-            return _mapper.Map<IEnumerable<AddressBookResponseDTO>>(contacts);
+            return _mapper.Map<IEnumerable<AddressBookRequestDTO>>(contacts);
         }
 
-        public AddressBookResponseDTO GetContactById(int id)
+        public AddressBookRequestDTO GetContactById(int id)
         {
             var contact = _addressBookRL.GetContactById(id);
-            return contact == null ? null : _mapper.Map<AddressBookResponseDTO>(contact);
+            return contact == null ? null : _mapper.Map<AddressBookRequestDTO>(contact);
         }
 
-        public AddressBookResponseDTO AddContact(ModelLayer.Model.AddressBookEntry contact)
+        public AddressBookRequestDTO AddContact(ModelLayer.Model.AddressBookEntry contact)
         {
             //var entity = _mapper.Map<AddressBookEntry>(contact);
             // Map RequestAddressBook to AddressBookEntry
             var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
             var newContact = _addressBookRL.AddContact(entity);
-            return _mapper.Map<AddressBookResponseDTO>(newContact);
+            return _mapper.Map<AddressBookRequestDTO>(newContact);
         }
 
-        public AddressBookResponseDTO UpdateContact(int id, ModelLayer.Model.AddressBookEntry contact)
+        public AddressBookRequestDTO UpdateContact(int id, ModelLayer.Model.AddressBookEntry contact)
         {
             var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);  
             var updatedContact = _addressBookRL.UpdateContact(id, entity); 
 
-            return updatedContact == null ? null : _mapper.Map<AddressBookResponseDTO>(updatedContact);
+            return updatedContact == null ? null : _mapper.Map<AddressBookRequestDTO>(updatedContact);
         }
 
         public bool DeleteContact(int id)
