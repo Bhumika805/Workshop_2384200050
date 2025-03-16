@@ -10,10 +10,10 @@ namespace RepositoryLayer.Interface
 {
     public interface IAddressBookRL
     {
-        IEnumerable<AddressBookRequestDTO> GetAllContacts();
-        AddressBookRequestDTO GetContactById(int id);
-        AddressBookRequestDTO AddContact(Entity.AddressBookEntity contact);
-        AddressBookRequestDTO UpdateContact(int id, Entity.AddressBookEntity contact);
+        IEnumerable<Entity.AddressBookEntity> GetAllContacts();
+        Entity.AddressBookEntity GetContactById(int id);
+        Entity.AddressBookEntity AddContact(Entity.AddressBookEntity contact);
+        Entity.AddressBookEntity UpdateContact(int id, Entity.AddressBookEntity contact);
         bool DeleteContact(int id);
     }
 }

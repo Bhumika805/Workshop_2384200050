@@ -5,9 +5,6 @@ using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Service
 {
@@ -22,40 +19,85 @@ namespace BusinessLayer.Service
             _mapper = mapper;
         }
 
-        public IEnumerable<AddressBookRequestDTO> GetAllContacts()
+        public IEnumerable<ModelLayer.Model.AddressBookEntry> GetAllContacts()
         {
-            var contacts = _addressBookRL.GetAllContacts();
-
-            return _mapper.Map<IEnumerable<AddressBookRequestDTO>>(contacts);
+            try
+            {
+                var contacts = _addressBookRL.GetAllContacts();
+                return _mapper.Map<IEnumerable<ModelLayer.Model.AddressBookEntry>>(contacts);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllContacts: {ex.Message}");
+                return null;
+            }
         }
 
-        public AddressBookRequestDTO GetContactById(int id)
+        public ModelLayer.Model.AddressBookEntry GetContactById(int id)
         {
-            var contact = _addressBookRL.GetContactById(id);
-            return contact == null ? null : _mapper.Map<AddressBookRequestDTO>(contact);
+            try
+            {
+                var contact = _addressBookRL.GetContactById(id);
+                return contact == null ? null : _mapper.Map<ModelLayer.Model.AddressBookEntry>(contact);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetContactById: {ex.Message}");
+                return null;
+            }
         }
 
-        public AddressBookRequestDTO AddContact(ModelLayer.Model.AddressBookEntry contact)
+        public ModelLayer.Model.AddressBookEntry AddContact(AddressBookRequestDTO contact)
         {
-            //var entity = _mapper.Map<AddressBookEntry>(contact);
-            // Map RequestAddressBook to AddressBookEntry
-            var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
-            var newContact = _addressBookRL.AddContact(entity);
-            return _mapper.Map<AddressBookRequestDTO>(newContact);
+            if (contact == null)
+            {
+                throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
+            }
+
+            try
+            {
+                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
+                var newContact = _addressBookRL.AddContact(entity);
+                return _mapper.Map<ModelLayer.Model.AddressBookEntry>(newContact);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddContact: {ex.Message}");
+                return null;
+            }
         }
 
-        public AddressBookRequestDTO UpdateContact(int id, ModelLayer.Model.AddressBookEntry contact)
+        public ModelLayer.Model.AddressBookEntry UpdateContact(int id, AddressBookRequestDTO contact)
         {
-            var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);  
-            var updatedContact = _addressBookRL.UpdateContact(id, entity); 
+            if (contact == null)
+            {
+                throw new ArgumentNullException(nameof(contact), "Contact data cannot be null.");
+            }
 
-            return updatedContact == null ? null : _mapper.Map<AddressBookRequestDTO>(updatedContact);
+            try
+            {
+                var entity = _mapper.Map<RepositoryLayer.Entity.AddressBookEntity>(contact);
+                var updatedContact = _addressBookRL.UpdateContact(id, entity);
+                return updatedContact == null ? null : _mapper.Map<ModelLayer.Model.AddressBookEntry>(updatedContact);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateContact: {ex.Message}");
+                return null;
+            }
         }
 
         public bool DeleteContact(int id)
         {
-            return _addressBookRL.DeleteContact(id);
+            try
+            {
+                return _addressBookRL.DeleteContact(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteContact: {ex.Message}");
+                return false;
+            }
         }
     }
-
 }

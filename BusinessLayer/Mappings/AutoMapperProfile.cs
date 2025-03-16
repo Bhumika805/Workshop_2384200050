@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using RepositoryLayer.Entity;
 using ModelLayer.Model;
 
-namespace BusinessLayer.Mappings
+namespace BusinessLayer.Mapping
 {
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {
-            
+
+            CreateMap<AddressBookRequestDTO, RepositoryLayer.Entity.AddressBookEntity>();
             CreateMap<AddressBookEntry, AddressBookEntry>();
-            CreateMap<RepositoryLayer.Entity.AddressBookEntity, AddressBookRequestDTO>();
         }
     }
 }

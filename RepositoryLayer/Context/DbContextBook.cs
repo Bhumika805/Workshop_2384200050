@@ -11,7 +11,7 @@ namespace RepositoryLayer.Context
 {
     public class DbContextBook : DbContext
     {
-        public DbSet<UserContactBook> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<AddressBookEntity> AddressBookEntries { get; set; }
 
         public DbContextBook(DbContextOptions<DbContextBook> options) : base(options) { }
@@ -19,7 +19,7 @@ namespace RepositoryLayer.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AddressBookEntity>()
-                .HasOne(ab => ab.UserContactBooks)
+                .HasOne(ab => ab.User)
                 .WithMany(u => u.AddressBookEntries)
                 .HasForeignKey(ab => ab.UserId);
         }
